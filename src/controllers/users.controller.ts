@@ -17,6 +17,12 @@ export const login: ExpressHandler<LoginRequest, LoginResponse> = async (
     return;
   }
   const token = await userService.login({ email, password });
+
+  if (!token) {
+    return res.status(400).json({
+      message: "failed",
+    });
+  }
   return res.status(200).json({
     message: "success!",
     data: {

@@ -3,35 +3,36 @@ import { compare, hash } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 
 import { User } from "../interfaces/user.interface";
+import prisma from "../datastore/client";
 
 // TODO: Implement Error Handler
 // TODO: Implement DB Object
 
-const user = new PrismaClient().user;
+const user = prisma.user;
 
-export const register = async ({ name, username, email, password }: User) => {
+export const register = async ({ name, username, email, password }: User) :Promise<User|null>=> {
   // Validate register fields
   if (!name || !email || !password || !username) {
     console.error("Some registration fields are missing! ", 400);
-    return;
+    return null;
   }
-
+  
   // Validate that email is not already registered
   const existingUser: User | null = await user.findFirst({
     where: {
       email,
     },
   });
-
+  
   if (existingUser) {
     console.error("This user is already registered! ", 400);
-    return;
+    return null;
   }
-
+  
   try {
     // Password hashing
     const hashedPassword = await hash(password, 12);
-
+    
     // Create new user
     const newUser: User | null = await user.create({
       data: {
@@ -49,14 +50,15 @@ export const register = async ({ name, username, email, password }: User) => {
         role: true,
       },
     });
-
+    
     return newUser;
   } catch (err) {
     console.error("Error in registering the user! ", 500, err);
+    return null;
   }
 };
 
-export const login = async ({ email, password }: User): Promise<string> => {
+export const login = async ({ email, password }: User): Promise<string|null> => {
   const existingUser = await user.findFirst({
     where: {
       email,
@@ -68,9 +70,7 @@ export const login = async ({ email, password }: User): Promise<string> => {
       "This email is not attached to any account. Please try again! ",
       400
     );
-    return Promise.resolve(
-      "This email is not attached to any account. Please try again! "
-    );
+    return null;
   }
 
   //compare the saved password with the password send via request body
@@ -78,7 +78,7 @@ export const login = async ({ email, password }: User): Promise<string> => {
 
   if (!isPassTrue) {
     console.error("Invalid password try again! ", 400);
-    return Promise.resolve("Invalid password try again!");
+    return null;
   }
 
   const { id } = existingUser;
