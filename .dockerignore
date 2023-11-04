@@ -1,0 +1,16 @@
+# Ignore node_modules folder
+node_modules
+
+# Ignore npm-debug.log
+npm-debug.log
+
+# Ignore any build output or compiled code
+dist/
+build/
+out/
+*.log
+*.pid
+
+# Ignore docker
+Dockerfile*
+docker-compose*
