@@ -6,52 +6,46 @@ import {
   RegisterResponse,
 } from "../interfaces/user.interface";
 import { ExpressHandler } from "../interfaces/ExpressHandler";
+import { JsonResponse } from "../utils/JsonResponse";
+import catchAsync from "../utils/catchAsync";
+import { NextFunction, Request, Response } from "express";
 
-export const login: ExpressHandler<LoginRequest, LoginResponse> = async (
-  req,
-  res
-) => {
-  const { email, password } = req.body;
-  if (!email || !password) {
-    console.error("Some login fields are missing! ", 400);
-    return;
+export const login: ExpressHandler<LoginRequest, LoginResponse> = catchAsync(
+  async (req: Request, res: Response, next: NextFunction) => {
+    const { email, password } = req.body;
+    const token = await userService.login({ email, password });
+
+    return new JsonResponse(res, 200)
+      .setMainContent(true, "Token sent successfully!")
+      .attachTokenCookie(token!, 24 * 60 * 60 * 1000, {
+        secure: true,
+        cookieName: "jwt",
+      })
+      .setPayload({
+        token,
+      })
+      .send();
   }
-  const token = await userService.login({ email, password });
+);
 
-  if (!token) {
-    return res.status(400).json({
-      message: "failed",
+export const register: ExpressHandler<RegisterRequest, RegisterResponse> =
+  catchAsync(async (req: Request, res: Response, next: NextFunction) => {
+    const { email, name, username, password } = req.body;
+    const newUser = await userService.register({
+      name,
+      username,
+      email,
+      password,
     });
-  }
-  return res.status(200).json({
-    message: "success!",
-    data: {
-      jwtToken: token,
-    },
+    if (newUser) {
+      return new JsonResponse(res, 201)
+        .setMainContent(true, "User registered successfully!")
+        .setPayload({})
+        .send();
+    } else {
+      return res.status(500).json({
+        message: "Failed!",
+        data: {},
+      });
+    }
   });
-};
-
-export const register: ExpressHandler<
-  RegisterRequest,
-  RegisterResponse
-> = async (req, res) => {
-  const { email, name, username, password } = req.body;
-  if (!name || !email || !password || !username) {
-    console.error("Some registration fields are missing! ", 400);
-    return;
-  }
-  const newUser = await userService.register({
-    name,
-    username,
-    email,
-    password,
-  });
-  if (newUser) {
-    return res.status(201).json({
-      message: "success!",
-      data: newUser,
-    });
-  } else {
-    return;
-  }
-};

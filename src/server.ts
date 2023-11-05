@@ -1,20 +1,21 @@
-import express from "express";
 import "dotenv/config";
 
-// import { DatabaseManager } from "./config/db";
-import { router } from "./routes/users.route";
+import { app } from "./app";
 
-const app = express();
+process.on("uncaughtException", (err) => {
+  console.log("UNCAUGHT EXCEPTION! Shutting down... ⛔");
+  console.log(err.name, err.message);
+  process.exit(1);
+});
 
-//  connect to db
-// const prisma = new DatabaseManager();
-// global.prisma = prisma;
+const PORT = process.env.PORT || 3000;
 
-app.use(express.json());
+app.listen(PORT, () => {
+  console.log(
+    `Server is running on port ${PORT} | ${process.env.NODE_ENV} Mode 🚀...`
+  );
+});
 
-// routes
-app.use("/api/v1/users/", router);
-
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
+process.on("unhandledRejection", (reason, promise) => {
+  console.log("Unhandled Rejection at:", promise, "reason:", reason);
 });

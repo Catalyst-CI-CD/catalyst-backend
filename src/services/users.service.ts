@@ -1,38 +1,41 @@
-import { PrismaClient } from "@prisma/client";
 import { compare, hash } from "bcryptjs";
 import { sign } from "jsonwebtoken";
 
 import { User } from "../interfaces/user.interface";
 import prisma from "../datastore/client";
+import { AppError } from "../utils/AppError";
 
 // TODO: Implement Error Handler
 // TODO: Implement DB Object
 
 const user = prisma.user;
 
-export const register = async ({ name, username, email, password }: User) :Promise<User|null>=> {
+export const register = async ({
+  name,
+  username,
+  email,
+  password,
+}: User): Promise<User | null> => {
   // Validate register fields
   if (!name || !email || !password || !username) {
-    console.error("Some registration fields are missing! ", 400);
-    return null;
+    throw new AppError("Some registration fields are missing!", 400);
   }
-  
+
   // Validate that email is not already registered
   const existingUser: User | null = await user.findFirst({
     where: {
       email,
     },
   });
-  
+
   if (existingUser) {
-    console.error("This user is already registered! ", 400);
-    return null;
+    throw new AppError("This user is already registered", 400);
   }
-  
+
   try {
     // Password hashing
     const hashedPassword = await hash(password, 12);
-    
+
     // Create new user
     const newUser: User | null = await user.create({
       data: {
@@ -50,15 +53,14 @@ export const register = async ({ name, username, email, password }: User) :Promi
         role: true,
       },
     });
-    
+
     return newUser;
   } catch (err) {
-    console.error("Error in registering the user! ", 500, err);
-    return null;
+    throw new AppError("Error in registering the user!", 500);
   }
 };
 
-export const login = async ({ email, password }: User): Promise<string|null> => {
+export const login = async ({ email, password }: User): Promise<string> => {
   const existingUser = await user.findFirst({
     where: {
       email,
@@ -66,24 +68,25 @@ export const login = async ({ email, password }: User): Promise<string|null> => 
   });
 
   if (!existingUser) {
-    console.error(
-      "This email is not attached to any account. Please try again! ",
+    throw new AppError(
+      "This email is not attached to any account. Please try again!",
       400
     );
-    return null;
   }
 
   //compare the saved password with the password send via request body
   const isPassTrue = await compare(password!, existingUser.password);
 
   if (!isPassTrue) {
-    console.error("Invalid password try again! ", 400);
-    return null;
+    throw new AppError("Invalid password try again!", 400);
   }
 
   const { id } = existingUser;
-
   const jwt = sign(id, process.env.JWT_SECRET as string);
 
-  return Promise.resolve(jwt);
+  if (!jwt) {
+    throw new AppError("Something wrong happened in generating the token", 500);
+  }
+
+  return jwt;
 };
