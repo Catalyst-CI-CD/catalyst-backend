@@ -5,9 +5,6 @@ import { User } from "../interfaces/user.interface";
 import prisma from "../datastore/client";
 import { AppError } from "../utils/AppError";
 
-// TODO: Implement Error Handler
-// TODO: Implement DB Object
-
 const user = prisma.user;
 
 export const register = async ({
