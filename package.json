@@ -6,7 +6,10 @@
   "scripts": {
     "startDev": "nodemon ./src/server.ts",
     "startProd": "ts-node ./src/server.ts",
-    "lint": "eslint ./src"
+    "lint": "eslint ./src",
+    "test": "jest -i --silent",
+    "migrate:up": "npx prisma migrate up",
+    "migrate:down": "npx prisma migrate down"
   },
   "author": "",
   "license": "ISC",
