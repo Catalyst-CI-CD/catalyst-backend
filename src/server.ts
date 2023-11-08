@@ -1,9 +1,21 @@
-import express from "express";
 import "dotenv/config";
 
-const app = express();
-app.use(express.json());
+import { app } from "./app";
 
-app.listen(process.env.PORT, () => {
-  console.log(`Server is running on port ${process.env.PORT}`);
+process.on("uncaughtException", (err) => {
+  console.log("UNCAUGHT EXCEPTION! Shutting down... ⛔");
+  console.log(err.name, err.message);
+  process.exit(1);
+});
+
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(
+    `Server is running on port ${PORT}`
+  );
+});
+
+process.on("unhandledRejection", (reason, promise) => {
+  console.log("Unhandled Rejection at:", promise, "reason:", reason);
 });
