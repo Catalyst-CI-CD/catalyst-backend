@@ -3,23 +3,24 @@ import {
   LoginResponse,
   RegisterRequest,
   RegisterResponse,
-} from "../interfaces/user.interface";
-import { ExpressHandler } from "../interfaces/expressHandler.interface";
-import { StatusCode } from "../enums/statusCode.enum";
-import { ResponseMessage } from "../enums/ResponseMessage.enum";
-import { ErrorResponse } from "../interfaces/errorResponse.interface";
+} from '../interfaces/user.interface';
+import { ExpressHandler } from '../interfaces/expressHandler.interface';
+import { StatusCode } from '../enums/statusCode.enum';
+import { ResponseMessage } from '../enums/ResponseMessage.enum';
+import { ErrorResponse } from '../interfaces/errorResponse.interface';
 import {
   createUser,
   getToken,
   getUserByEmail,
   getUserByUserName,
   validatePassword,
-} from "../services/users.service";
+} from '../services/users.service';
 
-export const register: ExpressHandler<
-  RegisterRequest,
-  RegisterResponse | ErrorResponse
-> = async (req, res, next) => {
+export const register: ExpressHandler<RegisterRequest, RegisterResponse | ErrorResponse> = async (
+  req,
+  res,
+  next
+) => {
   try {
     const { email, name, username, password } = req.body as {
       email: string;
@@ -54,11 +55,7 @@ export const register: ExpressHandler<
   }
 };
 
-export const login: ExpressHandler<LoginRequest, LoginResponse> = async (
-  req,
-  res,
-  next
-) => {
+export const login: ExpressHandler<LoginRequest, LoginResponse> = async (req, res, next) => {
   try {
     const { email, password } = req.body as { email: string; password: string };
 
@@ -77,16 +74,11 @@ export const login: ExpressHandler<LoginRequest, LoginResponse> = async (
     }
 
     const token = await getToken(user.id);
-    if (!token) {
-      return res
-        .status(StatusCode.HTTP_500_INTERNAL_SERVER_ERROR)
-        .json({ message: ResponseMessage.INTERNAL_SERVER_ERROR });
-    } else {
-      res.status(StatusCode.HTTP_200_OK).json({
-        message: ResponseMessage.TOKEN_SENT_SUCCESSFULLY,
-        data: { jwtToken: token },
-      });
-    }
+
+    res.status(StatusCode.HTTP_200_OK).json({
+      message: ResponseMessage.TOKEN_SENT_SUCCESSFULLY,
+      data: { jwtToken: token },
+    });
   } catch (error: any) {
     console.error(error.stack);
     next();

@@ -14,8 +14,6 @@ export const validateRegister = (function () {
     body("name")
       .isLength({ min: 1, max: 50 })
       .withMessage("name must be between 1 and 50 characters long")
-      .matches(/^[A-Za-z0-9_]+$/)
-      .withMessage("name must be alphanumeric only")
       .trim()
       .escape(),
 
@@ -26,7 +24,7 @@ export const validateRegister = (function () {
       .withMessage("Password must be between 5 and 30 characters long")
       .matches(/\d/)
       .withMessage("Password must contain a number"),
-      handleValidation
+    handleValidation,
   ];
 })();
 
@@ -39,6 +37,6 @@ export const validateLogIn = (function () {
       .withMessage("Password must be between 5 and 30 characters long")
       .matches(/\d/)
       .withMessage("Password must contain a number"),
-      handleValidation
+    handleValidation,
   ];
 })();
