@@ -15,6 +15,7 @@ export const login: ExpressHandler<LoginRequest, LoginResponse> = async (
   res,
   next
 ) => {
+  
   const { email, password } = req.body as { email: string; password: string };
 
   const token = await userService.login(email, password);
