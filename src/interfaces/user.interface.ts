@@ -3,27 +3,24 @@ export interface User {
   name: string;
   username: string;
   email: string;
-  photo: string;
   role: string;
+  password: string;
+  photo?: string;
   createdAt?: Date;
   isActive?: boolean;
-  password?: string;
 }
 
-export interface ErrorResponse {
-  message: string;
-}
 
-export type LoginRequest = User;
-export type LoginResponse = LoginResponseSuccess | Error;
-export type LoginResponseSuccess = {
+
+
+export type RegisterRequest = Omit<User, "id"|"role"|"createdAt"|"isActive">;
+export type RegisterResponse = {
   message: string;
-  data: { jwtToken: string };
+  data: Omit<User, "password" | "isActive" | "createdAt"|"role"|"isActive">;
 };
 
-export type RegisterRequest = User;
-export type RegisterResponse = RegisterResponseSuccess | Error;
-export type RegisterResponseSuccess = {
+export type LoginRequest = Pick<User, "email"|"password">;
+export type LoginResponse = {
   message: string;
-  data: Omit<User, "password" | "isActive" | "createdAt">;
+  data: { jwtToken: string };
 };

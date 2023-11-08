@@ -1,3 +1,6 @@
+import { ResponseMessage } from "../enums/ResponseMessage.enum";
+import { StatusCode } from "../enums/statusCode.enum";
+
 /**
  * Represents an application-specific error.
  * @class AppError
@@ -16,7 +19,7 @@ export class AppError extends Error {
   private status: string;
   private isOperational: boolean;
 
-  constructor(message = "", statusCode = 500) {
+  constructor(message:ResponseMessage, statusCode:StatusCode) {
     super(message);
     this.statusCode = statusCode;
     this.status = `${statusCode}`.startsWith("4") ? "fail" : "error";
