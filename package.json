@@ -9,6 +9,9 @@
     "lint": "eslint ./src",
     "test": "jest -i --silent"
   },
+  "prisma": {
+    "schema": "./src/prisma/schema.prisma"
+  },
   "author": "",
   "license": "ISC",
   "dependencies": {
