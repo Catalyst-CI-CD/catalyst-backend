@@ -3,7 +3,7 @@ export enum ResponseMessage {
   BAD_TOKEN = "bad token",
   TOKEN_SENT_SUCCESSFULLY = "token sent successfully",
 
-  USER_NOT_FOUND = "user not found",
+  USER_NOT_FOUND = "user is not found",
   DUPLICATE_EMAIL = "an account with the same email already exists",
   DUPLICATE_USERNAME = "an account with the same username already exists",
   INTERNAL_SERVER_ERROR = "internal server error",

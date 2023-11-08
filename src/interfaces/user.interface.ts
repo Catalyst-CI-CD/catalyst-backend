@@ -13,7 +13,7 @@ export interface User {
 
 
 
-export type RegisterRequest = Omit<User, "id"|"role"|"createdAt"|"isActive">;
+export type RegisterRequest = Omit<User, "id"|"role"|"createdAt"|"isActive"|"photo">;
 export type RegisterResponse = {
   message: string;
   data: Omit<User, "password" | "isActive" | "createdAt"|"role"|"isActive">;

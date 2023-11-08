@@ -17,7 +17,7 @@ model User {
   email             String        @unique
   password          String
   photo             String        @default("default.png")
-  role              Role          @default(USER)
+  role              Role          @default(MEMBER)
   isActive          Boolean       @default(true) @map("is_active")
   createdAt         DateTime      @default(now()) @map("created_at") @db.Timestamptz(0)
 
@@ -26,7 +26,7 @@ model User {
 
 enum Role {
   ADMIN
-  USER
+  MEMBER
 
   @@map("role")
 }
