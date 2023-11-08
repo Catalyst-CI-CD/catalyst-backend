@@ -3,7 +3,7 @@ import {
   JsonResponse,
   PayloadFailedDev,
   PayloadFailedProd,
-} from "../../utils/JsonResponse";
+} from "../../utils/jsonResponse.util";
 
 /**
  * Sends error response in production environment.

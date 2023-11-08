@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express";
-import { AppError } from "../../utils/AppError";
+import { AppError } from "../../utils/appError.util";
 
 /**
  * Middleware to handle undefined routes by generating a 404 error.

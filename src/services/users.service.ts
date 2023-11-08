@@ -3,7 +3,7 @@ import { sign } from "jsonwebtoken";
 
 import { User } from "../interfaces/user.interface";
 import prisma from "../datastore/client";
-import { AppError } from "../utils/AppError";
+import { AppError } from "../utils/appError.util";
 
 const user = prisma.user;
 
@@ -57,7 +57,7 @@ export const register = async ({
   }
 };
 
-export const login = async ({ email, password }: User): Promise<string> => {
+export const login = async (email:string,password:string): Promise<string> => {
   const existingUser = await user.findFirst({
     where: {
       email,

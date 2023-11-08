@@ -1,27 +1,29 @@
 export interface User {
-  id?: string;
-  name?: string;
-  username?: string;
-  password?: string;
-  email?: string;
-  photo?: string;
-  role?: string;
-  isActive?: boolean;
+  id: string;
+  name: string;
+  username: string;
+  email: string;
+  photo: string;
+  role: string;
   createdAt?: Date;
+  isActive?: boolean;
+  password?: string;
 }
 
-export interface Error{
-  message:string;
+export interface ErrorResponse {
+  message: string;
 }
 
 export type LoginRequest = User;
-export type LoginResponse = {
+export type LoginResponse = LoginResponseSuccess | Error;
+export type LoginResponseSuccess = {
   message: string;
   data: { jwtToken: string };
-}|Error;
+};
 
 export type RegisterRequest = User;
-export type RegisterResponse = {
+export type RegisterResponse = RegisterResponseSuccess | Error;
+export type RegisterResponseSuccess = {
   message: string;
   data: Omit<User, "password" | "isActive" | "createdAt">;
-}|Error;
+};
