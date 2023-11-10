@@ -39,7 +39,7 @@ describe('getUserByEmail', () => {
 });
 
 describe('getUserByUserName', () => {
-  it('should return retrieved user from datbase', async () => {
+  it('should return retrieved user from database', async () => {
     await prisma.user.create({
       data: user,
     });
@@ -108,7 +108,7 @@ describe('/POST register', () => {
 });
 
 describe('/POST login', () => {
-  it('should return 200 and the token for a succesful signing in', async () => {
+  it('should return 200 and the token for a successful signing in', async () => {
     await request(app).post('/api/v1/users/register').send(user);
     const got = await request(app).post('/api/v1/users/login').send({
       email: user.email,

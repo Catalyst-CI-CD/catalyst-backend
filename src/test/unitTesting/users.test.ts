@@ -31,7 +31,7 @@ const userWithHashedPassword: User = {
 };
 
 describe('getUserByEmail', () => {
-  it('should return retrieved user from datbase', async () => {
+  it('should return retrieved user from database', async () => {
     prisma.user.findFirst = jest.fn().mockResolvedValue(user);
 
     const got = await getUserByEmail(user.email);
@@ -42,7 +42,7 @@ describe('getUserByEmail', () => {
 });
 
 describe('getUserByUserName', () => {
-  it('should return retrieved user from datbase', async () => {
+  it('should return retrieved user from database', async () => {
     prisma.user.findFirst = jest.fn().mockResolvedValue(user);
 
     const got = await getUserByUserName(user.username);
