@@ -17,7 +17,7 @@ beforeEach(async () => {
 
 afterAll(async () => {
   await prisma.user.deleteMany();
-  prisma.user.createMany({ data: usersSnapshot! });
+  await prisma.user.createMany({ data: usersSnapshot! });
 });
 
 const user = {
