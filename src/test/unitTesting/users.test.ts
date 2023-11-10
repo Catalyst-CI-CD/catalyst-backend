@@ -34,7 +34,7 @@ describe('getUserByEmail', () => {
   it('should return retrieved user from datbase', async () => {
     prisma.user.findFirst = jest.fn().mockResolvedValue(user);
 
-    const got = await getUserByEmail('test@gmail.com');
+    const got = await getUserByEmail(user.email);
     const expected = user;
 
     expect(expected).toEqual(got);
@@ -45,7 +45,7 @@ describe('getUserByUserName', () => {
   it('should return retrieved user from datbase', async () => {
     prisma.user.findFirst = jest.fn().mockResolvedValue(user);
 
-    const got = await getUserByUserName('MahmoudShakour');
+    const got = await getUserByUserName(user.username);
     const expected = user;
 
     expect(expected).toEqual(got);
@@ -56,7 +56,7 @@ describe('createUser', () => {
   it('should return created user with hashed password', async () => {
     prisma.user.create = jest.fn().mockResolvedValue(userWithHashedPassword);
 
-    const got = await createUser('test@gmail.com', 'mahmoud', 'MahmoudShakour', '123m456789');
+    const got = await createUser(user.email, user.name, user.username, user.password);
     const expected = userWithHashedPassword;
 
     expect(got).toEqual(expected);

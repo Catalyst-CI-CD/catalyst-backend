@@ -1,9 +1,14 @@
 import { app } from '../../app';
 import prisma from '../../datastore/client';
 import { ResponseMessage } from '../../enums/ResponseMessage.enum';
+import { StatusCode } from '../../enums/statusCode.enum';
 import { createUser, getUserByEmail, getUserByUserName } from '../../services/users.service';
 const request = require('supertest');
 beforeEach(async () => {
+  await prisma.user.deleteMany();
+});
+
+afterAll(async () => {
   await prisma.user.deleteMany();
 });
 
@@ -16,7 +21,7 @@ const user = {
 
 describe('getUserByEmail', () => {
   it('should return null as database is empty', async () => {
-    const got = await getUserByEmail('test@gmail.com');
+    const got = await getUserByEmail(user.email);
     const expected = null;
 
     expect(expected).toEqual(got);
@@ -26,7 +31,7 @@ describe('getUserByEmail', () => {
     await prisma.user.create({
       data: user,
     });
-    const got = await getUserByEmail('test@gmail.com');
+    const got = await getUserByEmail(user.email);
     const expected = user;
 
     expect(got).toMatchObject(expected!);
@@ -38,7 +43,7 @@ describe('getUserByUserName', () => {
     await prisma.user.create({
       data: user,
     });
-    const got = await getUserByUserName('MahmoudShakour');
+    const got = await getUserByUserName(user.username);
     const expected = user;
 
     expect(got).toMatchObject(expected);
@@ -47,8 +52,8 @@ describe('getUserByUserName', () => {
 
 describe('createUser', () => {
   it('should return created user with hashed password', async () => {
-    const got = await createUser('test@gmail.com', 'mahmoud', 'MahmoudShakour', '123m456789');
-    const expected = await prisma.user.findFirst({ where: { email: 'test@gmail.com' } });
+    const got = await createUser(user.email, user.name, user.username, user.password);
+    const expected = await prisma.user.findFirst({ where: { email: user.email } });
 
     console.log(got, expected);
     expect(got).toMatchObject(expected!);
@@ -58,12 +63,12 @@ describe('createUser', () => {
 describe('/POST register', () => {
   it('should return 201 and get the created user', async () => {
     const got = await request(app).post('/api/v1/users/register').send(user);
-    expect(got.status).toBe(201);
+    expect(got.status).toBe(StatusCode.HTTP_201_CREATED);
     expect(got.body.message).toMatch(ResponseMessage.USER_CREATED_SUCCESSFULLY);
     expect(got.body.data).toMatchObject({
-      name: 'mahmoud',
-      username: 'MahmoudShakour',
-      email: 'test@gmail.com',
+      name: user.name,
+      username: user.username,
+      email: user.email,
     });
   });
 
@@ -71,11 +76,11 @@ describe('/POST register', () => {
     await prisma.user.create({ data: user });
     const got = await request(app).post('/api/v1/users/register').send({
       name: 'mahmoud',
-      username: 'MahmoudShakour',
-      email: 'test2@gmail.com',
+      username: user.username,
+      email: 'anotheremail@gmail.com',
       password: '123m456789',
     });
-    expect(got.status).toBe(409);
+    expect(got.status).toBe(StatusCode.HTTP_409_CONFLICT);
     expect(got.body.message).toMatch(ResponseMessage.DUPLICATE_USERNAME);
   });
 
@@ -83,22 +88,22 @@ describe('/POST register', () => {
     await prisma.user.create({ data: user });
     const got = await request(app).post('/api/v1/users/register').send({
       name: 'mahmoud',
-      username: 'MahmoudShakourrr',
-      email: 'test@gmail.com',
+      username: 'anotherUserName',
+      email: user.email,
       password: '123m456789',
     });
-    expect(got.status).toBe(409);
+    expect(got.status).toBe(StatusCode.HTTP_409_CONFLICT);
     expect(got.body.message).toMatch(ResponseMessage.DUPLICATE_EMAIL);
   });
 
   it('should return 400 as email format is not valid', async () => {
     const got = await request(app).post('/api/v1/users/register').send({
-      name: 'mahmoud',
-      username: 'MahmoudShakourrr',
+      name: user.name,
+      username: user.email,
       email: 'test.gmail.com',
-      password: '123m456789',
+      password: user.password,
     });
-    expect(got.status).toBe(400);
+    expect(got.status).toBe(StatusCode.HTTP_400_BAD_REQUEST);
   });
 });
 
@@ -106,11 +111,11 @@ describe('/POST login', () => {
   it('should return 200 and the token for a succesful signing in', async () => {
     await request(app).post('/api/v1/users/register').send(user);
     const got = await request(app).post('/api/v1/users/login').send({
-      email: 'test@gmail.com',
-      password: '123m456789',
+      email: user.email,
+      password: user.password,
     });
 
-    expect(got.status).toBe(200);
+    expect(got.status).toBe(StatusCode.HTTP_200_OK);
     expect(got.body.message).toMatch(ResponseMessage.TOKEN_SENT_SUCCESSFULLY);
     expect(got.body.data).toHaveProperty('jwtToken');
   });
@@ -118,22 +123,22 @@ describe('/POST login', () => {
   it('should return 404 for the incorrect email', async () => {
     await request(app).post('/api/v1/users/register').send(user);
     const got = await request(app).post('/api/v1/users/login').send({
-      email: 'tes@gmail.com',
-      password: '123m456789',
+      email: 'anotherEmail@gmail.com',
+      password: user.password,
     });
 
-    expect(got.status).toBe(404);
+    expect(got.status).toBe(StatusCode.HTTP_404_NOT_FOUND);
     expect(got.body.message).toMatch(ResponseMessage.USER_NOT_FOUND);
   });
 
   it('should return 401 for the incorrect password', async () => {
     await request(app).post('/api/v1/users/register').send(user);
     const got = await request(app).post('/api/v1/users/login').send({
-      email: 'test@gmail.com',
-      password: '123m45678',
+      email: user.email,
+      password: 'wrongPassword0',
     });
 
-    expect(got.status).toBe(401);
+    expect(got.status).toBe(StatusCode.HTTP_401_UNAUTHORIZED);
     expect(got.body.message).toMatch(ResponseMessage.INVALID_PASSWORD);
   });
 });
