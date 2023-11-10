@@ -3,13 +3,21 @@ import prisma from '../../datastore/client';
 import { ResponseMessage } from '../../enums/ResponseMessage.enum';
 import { StatusCode } from '../../enums/statusCode.enum';
 import { createUser, getUserByEmail, getUserByUserName } from '../../services/users.service';
-const request = require('supertest');
+import request from 'supertest';
+
+let usersSnapshot;
+
+beforeAll(async () => {
+  usersSnapshot = await prisma.user.findMany();
+});
+
 beforeEach(async () => {
   await prisma.user.deleteMany();
 });
 
 afterAll(async () => {
   await prisma.user.deleteMany();
+  prisma.user.createMany({ data: usersSnapshot! });
 });
 
 const user = {
