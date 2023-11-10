@@ -14,4 +14,6 @@ RUN npm i
 
 COPY --chown=appuser:appgroup . .
 
+RUN npx prisma generate
+
 CMD ["npm", "run", "startDev"]
