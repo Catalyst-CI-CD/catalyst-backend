@@ -1,12 +1,39 @@
 {
     "compilerOptions": {
-    "target": "ES2020",
-    "module": "commonjs",
-    "outDir": "./dist",
-    "rootDir": ".",
-    "declaration": true,
-    "sourceMap": true,
-    "strict": true,
-    "esModuleInterop": true,
+        "lib": [
+            "es6"
+        ],
+        "types": [
+            "reflect-metadata",
+            "swagger-express-ts"
+        ],
+        /* Basic Options */
+        "incremental": true,
+        "target": "ES2020",
+        "module": "commonjs",
+        "outDir": "dist",
+        "rootDir": ".",
+        "declaration": true,
+        "sourceMap": true,
+        /* Strict Type-Checking Options */
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "strictFunctionTypes": true,
+        "strictBindCallApply": true,
+        "strictPropertyInitialization": true,
+        "noImplicitThis": true,
+        "alwaysStrict": true,
+        /* Additional Checks */
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "noImplicitReturns": true,
+        "noFallthroughCasesInSwitch": true,
+        /* Module Resolution Options */
+        "moduleResolution": "node",
+        "baseUrl": ".",
+        "esModuleInterop": true,
+        /* Advanced Options */
+        "forceConsistentCasingInFileNames": true
     }
 }

@@ -1,9 +1,9 @@
-import "dotenv/config";
+import 'dotenv/config';
 
-import { app } from "./app";
+import { app } from './app';
 
-process.on("uncaughtException", (err) => {
-  console.log("UNCAUGHT EXCEPTION! Shutting down... ⛔");
+process.on('uncaughtException', (err) => {
+  console.log('UNCAUGHT EXCEPTION! Shutting down... ⛔');
   console.log(err.name, err.message);
   process.exit(1);
 });
@@ -16,6 +16,6 @@ app.listen(PORT, () => {
   );
 });
 
-process.on("unhandledRejection", (reason, promise) => {
-  console.log("Unhandled Rejection at:", promise, "reason:", reason);
+process.on('unhandledRejection', (reason, promise) => {
+  console.log('Unhandled Rejection at:', promise, 'reason:', reason);
 });
