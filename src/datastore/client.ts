@@ -10,4 +10,5 @@ const prisma = new PrismaClient();
     console.error('error in connecting the database', error);
   }
 })();
+
 export default prisma;

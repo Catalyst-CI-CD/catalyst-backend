@@ -1,7 +1,7 @@
-import { compare, hash } from 'bcryptjs';
 import { sign } from 'jsonwebtoken';
 import { User } from '../interfaces/user.interface';
 import prisma from '../datastore/client';
+import * as bcrypt from 'bcryptjs';
 
 const user = prisma.user;
 
@@ -31,7 +31,7 @@ export async function createUser(
   username: string,
   password: string
 ): Promise<User> {
-  const hashedPassword = await hash(password, 12);
+  const hashedPassword = await bcrypt.hash(password, 12);
   const newUser: User = await user.create({
     data: {
       email,
@@ -47,9 +47,11 @@ export const validatePassword = async (
   userPassword: string,
   hashedPassword: string
 ): Promise<boolean> => {
-  return await compare(userPassword, hashedPassword);
+  return await bcrypt.compare(userPassword, hashedPassword);
 };
 
 export const getToken = async (userId: string): Promise<string> => {
-  return sign(userId, process.env.JWT_SECRET as string);
+  return sign(userId, (process.env.JWT_SECRET as string));
 };
+
+

@@ -1,12 +1,5 @@
 {
     "compilerOptions": {
-        "lib": [
-            "es6"
-        ],
-        "types": [
-            "reflect-metadata",
-            "swagger-express-ts"
-        ],
         /* Basic Options */
         "incremental": true,
         "target": "ES2020",
