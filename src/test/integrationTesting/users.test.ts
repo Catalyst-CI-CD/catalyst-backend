@@ -117,7 +117,9 @@ describe('/POST register', () => {
 
 describe('/POST login', () => {
   it('should return 200 and the token for a successful signing in', async () => {
-    await request(app).post('/api/v1/users/register').send(user);
+    const res = await request(app).post('/api/v1/users/register').send(user);
+    expect(res.status).toBe(StatusCode.HTTP_201_CREATED);
+
     const got = await request(app).post('/api/v1/users/login').send({
       email: user.email,
       password: user.password,
@@ -129,7 +131,9 @@ describe('/POST login', () => {
   });
 
   it('should return 404 for the incorrect email', async () => {
-    await request(app).post('/api/v1/users/register').send(user);
+    const res = await request(app).post('/api/v1/users/register').send(user);
+    expect(res.status).toBe(StatusCode.HTTP_201_CREATED);
+
     const got = await request(app).post('/api/v1/users/login').send({
       email: 'anotherEmail@gmail.com',
       password: user.password,
@@ -140,7 +144,9 @@ describe('/POST login', () => {
   });
 
   it('should return 401 for the incorrect password', async () => {
-    await request(app).post('/api/v1/users/register').send(user);
+    const res = await request(app).post('/api/v1/users/register').send(user);
+    expect(res.status).toBe(StatusCode.HTTP_201_CREATED);
+
     const got = await request(app).post('/api/v1/users/login').send({
       email: user.email,
       password: 'wrongPassword0',
