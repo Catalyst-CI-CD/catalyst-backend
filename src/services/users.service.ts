@@ -50,7 +50,7 @@ export const validatePassword = async (
   return await bcrypt.compare(userPassword, hashedPassword);
 };
 
-export const getToken = async (userId: string): Promise<string> => {
+export const getToken = (userId: string): string => {
   return sign(userId, (process.env.JWT_SECRET as string));
 };
 
