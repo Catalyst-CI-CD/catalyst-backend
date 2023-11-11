@@ -2,10 +2,10 @@ name: test
 
 on:
   push:
-    branches: 
+    branches:
       - main
   pull_request:
-    branches: 
+    branches:
       - main
       - dev
 
@@ -39,6 +39,7 @@ jobs:
         run: npx prisma migrate deploy
         env:
           NODE_ENV: dev
+          POSTGRES_URL: postgres://postgres:secret@localhost:5432/catalyst_db_dev
 
       - name: Run tests
         run: npm run test
