@@ -43,3 +43,6 @@ jobs:
 
       - name: Run tests
         run: npm run test
+        env:
+          NODE_ENV: dev
+          POSTGRES_URL: postgres://postgres:secret@localhost:5432/catalyst_db_dev
