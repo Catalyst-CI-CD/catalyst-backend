@@ -40,7 +40,7 @@ export const register: ExpressHandler<RegisterRequest, RegisterResponse | ErrorR
     }
 
     const newUser = await createUser(email, name, username, password);
-    res.status(StatusCode.HTTP_201_CREATED).json({
+    return res.status(StatusCode.HTTP_201_CREATED).json({
       message: ResponseMessage.USER_CREATED_SUCCESSFULLY,
       data: {
         id: newUser.id,
@@ -51,7 +51,7 @@ export const register: ExpressHandler<RegisterRequest, RegisterResponse | ErrorR
     });
   } catch (error: any) {
     console.error(error.stack);
-    next();
+    return next();
   }
 };
 
@@ -75,12 +75,12 @@ export const login: ExpressHandler<LoginRequest, LoginResponse> = async (req, re
 
     const token = await getToken(user.id);
 
-    res.status(StatusCode.HTTP_200_OK).json({
-      message: ResponseMessage.TOKEN_SENT_SUCCESSFULLY,
+    return res.status(StatusCode.HTTP_200_OK).json({
+      message: ResponseMessage.SUCCESSFUL_LOGIN,
       data: { jwtToken: token },
     });
   } catch (error: any) {
     console.error(error.stack);
-    next();
+    return next();
   }
 };

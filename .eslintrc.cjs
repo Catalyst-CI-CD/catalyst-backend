@@ -8,6 +8,7 @@ module.exports = {
     sourceType: 'module', // Allows for the use of imports
   },
   rules: {
+    quotes: [2, 'single', { avoidEscape: true }],
     'no-shadow': 'off',
     '@typescript-eslint/no-shadow': 'error',
     '@typescript-eslint/explicit-member-accessibility': 'off',

@@ -124,7 +124,7 @@ describe('/POST login', () => {
     });
 
     expect(got.status).toBe(StatusCode.HTTP_200_OK);
-    expect(got.body.message).toMatch(ResponseMessage.TOKEN_SENT_SUCCESSFULLY);
+    expect(got.body.message).toMatch(ResponseMessage.SUCCESSFUL_LOGIN);
     expect(got.body.data).toHaveProperty('jwtToken');
   });
 

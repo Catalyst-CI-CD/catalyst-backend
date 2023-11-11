@@ -1,8 +1,8 @@
-import { RequestHandler } from "express";
+import { RequestHandler } from 'express';
 
-export type ExpressHandler<RequestBody, ResposeBody> = RequestHandler<
+export type ExpressHandler<RequestBody, ResponseBody> = RequestHandler<
   any,
-  Partial<ResposeBody>,
+  Partial<ResponseBody>,
   Partial<RequestBody>,
   any
 >;
