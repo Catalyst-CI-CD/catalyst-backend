@@ -73,7 +73,7 @@ export const login: ExpressHandler<LoginRequest, LoginResponse> = async (req, re
         .json({ message: ResponseMessage.INVALID_PASSWORD });
     }
 
-    const token = await getToken(user.id);
+    const token = getToken(user.id);
 
     return res.status(StatusCode.HTTP_200_OK).json({
       message: ResponseMessage.SUCCESSFUL_LOGIN,
