@@ -46,3 +46,4 @@ jobs:
         env:
           NODE_ENV: dev
           POSTGRES_URL: postgres://postgres:secret@localhost:5432/catalyst_db_dev
+          JWT_SECRET: secret
